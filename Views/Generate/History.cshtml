@@ -1,7 +1,7 @@
 @using MerchantFile.Models
 @{
     ViewBag.Title = "History";
-    var jobs = ViewBag.RecentJobs as System.Collections.Generic.List<RecentJob> ?? new System.Collections.Generic.List<RecentJob>();
+    var jobs = ViewBag.Jobs as System.Collections.Generic.List<RecentJob> ?? new System.Collections.Generic.List<RecentJob>();
 }
 
 <div class="mf-page">
@@ -51,7 +51,7 @@
                         <div class="mf-recent-file">@j.File</div>
                         <div class="mf-recent-meta">@j.Rows rows &middot; <span class="mf-mono">@j.Id</span></div>
                     </div>
-                    <div class="mf-recent-when">@j.At</div>
+                    <div class="mf-recent-when">@j.RelativeTime</div>
                     <a href="@Url.Action("Download", "Generate", new { jobId = j.Id })" class="mf-btn mf-btn-ghost mf-btn-sm">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />

@@ -5,13 +5,28 @@
     <p>The document we'll fill in for each row. Add placeholders like <code>{{name}}</code> and <code>{{nik}}</code> where the data should go.</p>
 </div>
 
+@if (TempData["WizardError"] != null)
+{
+    <div class="mf-info-banner" style="background:var(--mf-danger-soft);border-color:#FCA5A5;color:var(--mf-danger-fg);margin-bottom:16px;">
+        <span class="mf-info-banner-icon" style="color:var(--mf-danger);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+        </span>
+        <div>@TempData["WizardError"]</div>
+    </div>
+}
+
 <div class="mf-wizard-card">
     @if (!Model.TemplateUploaded)
     {
-        <form method="get" action="@Url.Action("Wizard", "Generate")">
-            <input type="hidden" name="step" value="2" />
+        using (Html.BeginForm("UploadTemplate", "Generate", FormMethod.Post, new { enctype = "multipart/form-data", id = "tplForm" }))
+        {
+            @Html.AntiForgeryToken()
             <input type="hidden" name="jobId" value="@Model.JobId" />
-            <div class="mf-dropzone" tabindex="0">
+            <label class="mf-dropzone" tabindex="0" for="tplFile">
                 <span class="mf-dropzone-icon">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
@@ -23,16 +38,17 @@
                     <div class="mf-dropzone-title">Drop your template here</div>
                     <div class="mf-dropzone-sub">Or click to browse &mdash; PDF or Word, up to 10 MB</div>
                 </div>
-                <button type="submit" class="mf-btn mf-btn-secondary">
+                <span class="mf-btn mf-btn-secondary" style="pointer-events:none;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                         <path d="M17 8l-5-5-5 5" />
                         <path d="M12 3v12" />
                     </svg>
                     Browse files
-                </button>
-            </div>
-        </form>
+                </span>
+                <input type="file" id="tplFile" name="file" accept=".pdf,.docx" style="display:none;" />
+            </label>
+        }
     }
     else
     {
@@ -45,11 +61,11 @@
                 </svg>
             </span>
             <div class="mf-filepill-main">
-                <div class="mf-filepill-name">@Model.TemplateFileName</div>
+                <div class="mf-filepill-name">@Model.Meta.TemplateFileName</div>
                 <div class="mf-filepill-meta">@Model.TemplateMeta</div>
             </div>
             <span class="mf-badge mf-badge--success">Uploaded</span>
-            <a href="@Url.Action("Wizard", "Generate", new { step = 1 })" class="mf-filepill-remove" title="Remove">
+            <a href="@Url.Action("Wizard", "Generate", new { step = 1, jobId = Model.JobId, reset = "template" })" class="mf-filepill-remove" title="Remove">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6" />
                     <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
@@ -59,22 +75,61 @@
             </a>
         </div>
 
-        <div class="mf-info-banner">
-            <span class="mf-info-banner-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="9" />
-                    <polyline points="8 12 11 15 16 9" />
-                </svg>
+        @{
+            var placeholders = Model.Meta.Placeholders ?? new System.Collections.Generic.List<string>();
+            var hasName = placeholders.Exists(p => p.Equals("name", System.StringComparison.OrdinalIgnoreCase));
+            var hasNik = placeholders.Exists(p => p.Equals("nik", System.StringComparison.OrdinalIgnoreCase));
+            var bothPresent = hasName && hasNik;
+        }
+        <div class="mf-info-banner" style="@(bothPresent ? "" : "background:#FEF3C7;border-color:#FDE68A;color:#92400E;")">
+            <span class="mf-info-banner-icon" style="@(bothPresent ? "" : "color:#A16207;")">
+                @if (bothPresent)
+                {
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="9" />
+                        <polyline points="8 12 11 15 16 9" />
+                    </svg>
+                }
+                else
+                {
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                }
             </span>
             <div>
-                We detected <strong>2 placeholders</strong> in your template: <code class="mf-pill-code">{{name}}</code> and <code class="mf-pill-code">{{nik}}</code>. Make sure your Excel has matching column names.
+                @if (placeholders.Count == 0)
+                {
+                    <text>We didn't find any <code class="mf-pill-code">{{...}}</code> placeholders in this file. You can still continue &mdash; pages will be generated from the default registration form layout.</text>
+                }
+                else
+                {
+                    <text>We detected <strong>@placeholders.Count placeholder@(placeholders.Count == 1 ? "" : "s")</strong> in your template:
+                        @for (var i = 0; i < placeholders.Count; i++)
+                        {
+                            <code class="mf-pill-code">{{@placeholders[i]}}</code>@(i < placeholders.Count - 1 ? ", " : ". ")
+                        }
+                        @if (!bothPresent)
+                        {
+                            <text>Missing: @(!hasName ? "<code class=\"mf-pill-code\">{{name}}</code>" : "")@(!hasName && !hasNik ? " and " : "")@(!hasNik ? "<code class=\"mf-pill-code\">{{nik}}</code>" : "").</text>
+                        }
+                        Make sure your Excel has matching column names.
+                    </text>
+                }
             </div>
         </div>
     }
 </div>
 
 <div class="mf-wizard-footer">
-    <a href="@Url.Action("Index", "Home")" class="mf-btn mf-btn-ghost mf-btn-lg">Cancel</a>
+    @using (Html.BeginForm("Cancel", "Generate", FormMethod.Post, new { style = "display:inline;" }))
+    {
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="jobId" value="@Model.JobId" />
+        <button type="submit" class="mf-btn mf-btn-ghost mf-btn-lg" onclick="return confirm('Discard this job?');">Cancel</button>
+    }
     <a href="@Url.Action("Wizard", "Generate", new { step = 2, jobId = Model.JobId })"
        class="mf-btn mf-btn-primary mf-btn-lg @(Model.TemplateUploaded ? "" : "disabled")"
        aria-disabled="@(Model.TemplateUploaded ? "false" : "true")">

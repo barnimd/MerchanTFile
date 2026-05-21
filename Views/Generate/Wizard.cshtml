@@ -69,35 +69,60 @@
 @section scripts {
     <script>
         (function ($) {
-            // Drop zone: visual hover state + simulated upload that auto-advances.
-            $('.mf-dropzone').on('dragover', function (e) {
+            // Drop-zone interactions: visual hover + auto-submit on pick / drop.
+            $('.mf-dropzone').on('dragover dragenter', function (e) {
                 e.preventDefault();
                 $(this).addClass('mf-dropzone--hover');
-            }).on('dragleave drop', function (e) {
+            }).on('dragleave', function (e) {
                 e.preventDefault();
                 $(this).removeClass('mf-dropzone--hover');
-            });
-
-            $('.mf-dropzone').on('click', function () {
+            }).on('drop', function (e) {
+                e.preventDefault();
+                $(this).removeClass('mf-dropzone--hover');
+                var files = e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.files;
+                if (!files || !files.length) return;
                 var $input = $(this).find('input[type=file]');
-                if ($input.length) $input.trigger('click');
-            });
-
-            $('.mf-dropzone input[type=file]').on('click', function (e) {
-                e.stopPropagation();
+                if (!$input.length) return;
+                // Assign to the input and submit. DataTransfer trick to set FileList.
+                var dt = new DataTransfer();
+                dt.items.add(files[0]);
+                $input[0].files = dt.files;
+                $input.trigger('change');
             });
 
             $('.mf-dropzone input[type=file]').on('change', function () {
                 var $form = $(this).closest('form');
-                if ($form.length) $form.trigger('submit');
+                if (!$form.length) return;
+                var $zone = $(this).closest('.mf-dropzone');
+                $zone.html('<div style="padding:24px;text-align:center;color:var(--mf-ink-faint);">Uploading &hellip;</div>');
+                $form.trigger('submit');
             });
 
-            // Preview thumbnail / arrow nav (preserves jobId on the URL).
+            // Preview arrow-key navigation when the preview pane is visible.
             $(document).on('keydown', function (e) {
                 if (!$('.mf-preview-grid').length) return;
-                if (e.key === 'ArrowLeft')  { $('.mf-prev-btn').get(0) && $('.mf-prev-btn')[0].click(); }
-                if (e.key === 'ArrowRight') { $('.mf-next-btn').get(0) && $('.mf-next-btn')[0].click(); }
+                if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+                if (e.key === 'ArrowLeft') {
+                    var $p = $('.mf-prev-btn');
+                    if ($p.length) { window.location.href = $p.attr('href'); }
+                } else if (e.key === 'ArrowRight') {
+                    var $n = $('.mf-next-btn');
+                    if ($n.length) { window.location.href = $n.attr('href'); }
+                }
             });
+
+            // Step 4: auto-trigger download once on first arrival.
+            @if (Model.Step == 4)
+            {
+                <text>
+                if (!sessionStorage.getItem('mf-dl-@Model.JobId')) {
+                    sessionStorage.setItem('mf-dl-@Model.JobId', '1');
+                    setTimeout(function () {
+                        window.location.href = '@Url.Action("Download", "Generate", new { jobId = Model.JobId })';
+                    }, 350);
+                }
+                </text>
+            }
         })(jQuery);
     </script>
 }

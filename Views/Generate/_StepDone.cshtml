@@ -1,6 +1,12 @@
 @model MerchantFile.Models.GenerateJobViewModel
 @{
     var total = Model.Rows.Count;
+    var fileName = string.IsNullOrEmpty(Model.Meta.DataFileName)
+        ? (Model.JobId ?? "merchantfile")
+        : System.IO.Path.GetFileNameWithoutExtension(Model.Meta.DataFileName);
+    var sizeText = Model.Meta.OutputFileSize > 0
+        ? (Model.Meta.OutputFileSize / 1024.0 / 1024.0).ToString("0.#") + " MB"
+        : "";
 }
 
 <div class="mf-done">
@@ -10,7 +16,9 @@
         </svg>
     </div>
     <h2>All done!</h2>
-    <p class="mf-done-sub">Your PDF is ready &mdash; @total pages, 1.2 MB.</p>
+    <p class="mf-done-sub">
+        Your PDF is ready &mdash; @total page@(total == 1 ? "" : "s")@(string.IsNullOrEmpty(sizeText) ? "" : ", " + sizeText).
+    </p>
 
     <div class="mf-done-file">
         <span class="mf-done-file-icon">
@@ -21,8 +29,8 @@
             </svg>
         </span>
         <div style="flex:1;min-width:0;">
-            <div style="font-size:14px;font-weight:600;">@(Model.JobId ?? "merchantfile").pdf</div>
-            <div style="font-size:12px;color:var(--mf-ink-faint);">@total pages &middot; saved to Downloads</div>
+            <div style="font-size:14px;font-weight:600;">@fileName.pdf</div>
+            <div style="font-size:12px;color:var(--mf-ink-faint);">@total page@(total == 1 ? "" : "s") &middot; <span class="mf-mono">@Model.JobId</span></div>
         </div>
         <a href="@Url.Action("Download", "Generate", new { jobId = Model.JobId })" class="mf-btn mf-btn-primary">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -30,7 +38,7 @@
                 <path d="M7 10l5 5 5-5" />
                 <path d="M12 15V3" />
             </svg>
-            Open
+            Download
         </a>
     </div>
 

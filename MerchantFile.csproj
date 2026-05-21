@@ -168,6 +168,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -238,8 +240,12 @@
     <Compile Include="Controllers\GenerateController.cs" />
     <Compile Include="Models\ExcelRow.cs" />
     <Compile Include="Models\GenerateJobViewModel.cs" />
+    <Compile Include="Models\JobMeta.cs" />
     <Compile Include="Models\RecentJob.cs" />
-    <Compile Include="Services\SampleData.cs" />
+    <Compile Include="Services\ExcelReader.cs" />
+    <Compile Include="Services\JobStore.cs" />
+    <Compile Include="Services\PdfGenerator.cs" />
+    <Compile Include="Services\TemplateScanner.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

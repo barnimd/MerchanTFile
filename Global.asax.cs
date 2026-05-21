@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using MerchantFile.Services;
 
 namespace MerchantFile
 {
@@ -16,6 +14,10 @@ namespace MerchantFile
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            // Sweep job folders older than 24h on every cold start.
+            try { new JobStore().GarbageCollect(TimeSpan.FromHours(24)); }
+            catch { /* best-effort */ }
         }
     }
 }
