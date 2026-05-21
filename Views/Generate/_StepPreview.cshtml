@@ -2,8 +2,8 @@
 @{
     var total = Model.Rows.Count;
     var selected = Model.SelectedPage;
-    if (selected < 0) selected = 0;
-    if (selected >= total) selected = total - 1;
+    if (selected < 0) { selected = 0; }
+    if (selected >= total) { selected = total - 1; }
     var current = Model.Rows[selected];
     var prev = selected - 1;
     var next = selected + 1;
