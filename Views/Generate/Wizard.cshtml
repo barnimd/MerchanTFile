@@ -93,9 +93,11 @@
             $('.mf-dropzone input[type=file]').on('change', function () {
                 var $form = $(this).closest('form');
                 if (!$form.length) return;
-                var $zone = $(this).closest('.mf-dropzone');
-                $zone.html('<div style="padding:24px;text-align:center;color:var(--mf-ink-faint);">Uploading &hellip;</div>');
+                // Submit FIRST — replacing the dropzone HTML before submit would
+                // detach the file input and send an empty multipart body.
                 $form.trigger('submit');
+                var $zone = $(this).closest('.mf-dropzone');
+                $zone.css('opacity', 0.5).find('.mf-dropzone-title').text('Uploading…');
             });
 
             // Preview arrow-key navigation when the preview pane is visible.
