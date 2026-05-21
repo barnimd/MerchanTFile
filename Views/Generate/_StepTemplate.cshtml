@@ -75,12 +75,11 @@
             </a>
         </div>
 
-        @{
-            var placeholders = Model.Meta.Placeholders ?? new System.Collections.Generic.List<string>();
-            var hasName = placeholders.Exists(p => p.Equals("name", System.StringComparison.OrdinalIgnoreCase));
-            var hasNik = placeholders.Exists(p => p.Equals("nik", System.StringComparison.OrdinalIgnoreCase));
-            var bothPresent = hasName && hasNik;
-        }
+        var placeholders = Model.Meta.Placeholders ?? new System.Collections.Generic.List<string>();
+        var hasName = placeholders.Exists(p => p.Equals("name", System.StringComparison.OrdinalIgnoreCase));
+        var hasNik = placeholders.Exists(p => p.Equals("nik", System.StringComparison.OrdinalIgnoreCase));
+        var bothPresent = hasName && hasNik;
+
         <div class="mf-info-banner" style="@(bothPresent ? "" : "background:#FEF3C7;border-color:#FDE68A;color:#92400E;")">
             <span class="mf-info-banner-icon" style="@(bothPresent ? "" : "color:#A16207;")">
                 @if (bothPresent)

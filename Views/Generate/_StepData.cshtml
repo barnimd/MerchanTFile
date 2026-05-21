@@ -75,10 +75,9 @@
             </a>
         </div>
 
-        @{
-            var totalRows = Model.Rows.Count;
-            var errCount = Model.Meta.ErrorRowCount;
-        }
+        var totalRows = Model.Rows.Count;
+        var errCount = Model.Meta.ErrorRowCount;
+
         <div style="margin-top:18px;">
             <div class="mf-data-head">
                 <span class="mf-caption">Data preview</span>
