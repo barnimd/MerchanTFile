@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Remove-Item \"C:\\\\Users\\\\baraa\\\\Project Github\\\\MerchanTFile\\\\Views\\\\Home\\\\About.cshtml\" -Force -ErrorAction SilentlyContinue; Remove-Item \"C:\\\\Users\\\\baraa\\\\Project Github\\\\MerchanTFile\\\\Views\\\\Home\\\\Contact.cshtml\" -Force -ErrorAction SilentlyContinue; New-Item -ItemType Directory -Path \"C:\\\\Users\\\\baraa\\\\Project Github\\\\MerchanTFile\\\\App_Data\\\\jobs\" -Force | Out-Null; if \\(-not \\(Test-Path \"C:\\\\Users\\\\baraa\\\\Project Github\\\\MerchanTFile\\\\App_Data\\\\jobs\\\\.gitkeep\"\\)\\) { New-Item -ItemType File -Path \"C:\\\\Users\\\\baraa\\\\Project Github\\\\MerchanTFile\\\\App_Data\\\\jobs\\\\.gitkeep\" | Out-Null }; Get-ChildItem \"C:\\\\Users\\\\baraa\\\\Project Github\\\\MerchanTFile\\\\Views\\\\Home\")"
+    ]
+  }
+}

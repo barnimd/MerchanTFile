@@ -1,0 +1,47 @@
+@model MerchantFile.Models.GenerateJobViewModel
+@{
+    var total = Model.Rows.Count;
+}
+
+<div class="mf-done">
+    <div class="mf-done-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 12 10 18 20 6" />
+        </svg>
+    </div>
+    <h2>All done!</h2>
+    <p class="mf-done-sub">Your PDF is ready &mdash; @total pages, 1.2 MB.</p>
+
+    <div class="mf-done-file">
+        <span class="mf-done-file-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                <path d="M14 3v5h5" />
+                <path d="M9 13h6M9 17h6M9 9h2" />
+            </svg>
+        </span>
+        <div style="flex:1;min-width:0;">
+            <div style="font-size:14px;font-weight:600;">@(Model.JobId ?? "merchantfile").pdf</div>
+            <div style="font-size:12px;color:var(--mf-ink-faint);">@total pages &middot; saved to Downloads</div>
+        </div>
+        <a href="@Url.Action("Download", "Generate", new { jobId = Model.JobId })" class="mf-btn mf-btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <path d="M7 10l5 5 5-5" />
+                <path d="M12 15V3" />
+            </svg>
+            Open
+        </a>
+    </div>
+
+    <div class="mf-done-actions">
+        <a href="@Url.Action("Index", "Home")" class="mf-btn mf-btn-secondary mf-btn-lg">Back to home</a>
+        <a href="@Url.Action("Wizard", "Generate", new { step = 1 })" class="mf-btn mf-btn-ghost mf-btn-lg">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Start another
+        </a>
+    </div>
+</div>

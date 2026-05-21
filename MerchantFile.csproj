@@ -121,6 +121,11 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\GenerateController.cs" />
+    <Compile Include="Models\ExcelRow.cs" />
+    <Compile Include="Models\GenerateJobViewModel.cs" />
+    <Compile Include="Models\RecentJob.cs" />
+    <Compile Include="Services\SampleData.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -174,13 +179,21 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Generate\Wizard.cshtml" />
+    <Content Include="Views\Generate\_StepTemplate.cshtml" />
+    <Content Include="Views\Generate\_StepData.cshtml" />
+    <Content Include="Views\Generate\_StepPreview.cshtml" />
+    <Content Include="Views\Generate\_StepDone.cshtml" />
+    <Content Include="Views\Generate\_DocPage.cshtml" />
+    <Content Include="Views\Generate\History.cshtml" />
+    <Content Include="Content\merchantfile.css" />
+    <Content Include="Content\img\logo.svg" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
+    <Folder Include="App_Data\jobs\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

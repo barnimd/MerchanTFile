@@ -1,33 +1,181 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+@using MerchantFile.Models
+@{
+    ViewBag.Title = "Home";
+    var jobs = ViewBag.RecentJobs as System.Collections.Generic.List<RecentJob> ?? new System.Collections.Generic.List<RecentJob>();
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
-
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+<div class="mf-page">
+    <!-- Hero -->
+    <div class="mf-card mf-hero">
+        <div class="mf-hero-inner">
+            <div class="mf-pill">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" />
+                </svg>
+                Excel &rarr; PDF in three steps
+            </div>
+            <h1 class="mf-h1">Fill your template with spreadsheet data, page by page.</h1>
+            <p class="mf-lead">Upload a template, drop in an Excel file, preview the result, then download a print-ready PDF &mdash; one page per row.</p>
+            <div class="mf-button-row">
+                <a href="@Url.Action("Wizard", "Generate", new { step = 1 })" class="mf-btn mf-btn-primary mf-btn-lg">
+                    Start a new job
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="12" x2="20" y2="12" />
+                        <polyline points="14 6 20 12 14 18" />
+                    </svg>
+                </a>
+                <button type="button" class="mf-btn mf-btn-secondary mf-btn-lg" data-bs-toggle="modal" data-bs-target="#howItWorksModal">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                        <path d="M14 3v5h5" />
+                        <path d="M9 13h6M9 17h6M9 9h2" />
+                    </svg>
+                    How it works
+                </button>
+            </div>
+        </div>
     </div>
-</main>
+
+    <!-- Step overview -->
+    <div class="mf-step-grid">
+        <div class="mf-step-card">
+            <div class="mf-step-card-head">
+                <span class="mf-step-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                        <path d="M14 3v5h5" />
+                        <path d="M9 13h6M9 17h6M9 9h2" />
+                    </svg>
+                </span>
+                <span class="mf-step-number">01</span>
+            </div>
+            <div>
+                <div class="mf-step-title">Upload template</div>
+                <div class="mf-step-desc">A PDF or Word file with placeholders for Name and NIK.</div>
+            </div>
+        </div>
+        <div class="mf-step-card">
+            <div class="mf-step-card-head">
+                <span class="mf-step-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                        <path d="M14 3v5h5" />
+                        <path d="M9 13l2 3 2-3M9 19l2-3 2 3" />
+                    </svg>
+                </span>
+                <span class="mf-step-number">02</span>
+            </div>
+            <div>
+                <div class="mf-step-title">Drop your Excel</div>
+                <div class="mf-step-desc">Two columns: Full Name and NIK. Each row becomes one page.</div>
+            </div>
+        </div>
+        <div class="mf-step-card">
+            <div class="mf-step-card-head">
+                <span class="mf-step-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <path d="M7 10l5 5 5-5" />
+                        <path d="M12 15V3" />
+                    </svg>
+                </span>
+                <span class="mf-step-number">03</span>
+            </div>
+            <div>
+                <div class="mf-step-title">Preview &amp; download</div>
+                <div class="mf-step-desc">Check the result, then save the full PDF in one click.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent activity -->
+    <div style="margin-top:36px;">
+        <div class="mf-section-head">
+            <h2 class="mf-section-title">Recent activity</h2>
+            <a href="@Url.Action("History", "Generate")" class="mf-section-link">View all</a>
+        </div>
+
+        @if (jobs.Count == 0)
+        {
+            <div class="mf-recent">
+                <div class="mf-recent-empty">
+                    <div style="margin-bottom:10px;">No jobs yet</div>
+                    <a href="@Url.Action("Wizard", "Generate", new { step = 1 })" class="mf-btn mf-btn-primary mf-btn-sm">Start your first job</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="mf-recent">
+                @foreach (var j in jobs)
+                {
+                    var failed = j.Status == "failed";
+                    <div class="mf-recent-row">
+                        <span class="mf-recent-status @(failed ? "mf-recent-status--failed" : "")">
+                            @if (failed)
+                            {
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                </svg>
+                            }
+                            else
+                            {
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="4 12 10 18 20 6" />
+                                </svg>
+                            }
+                        </span>
+                        <div class="mf-recent-main">
+                            <div class="mf-recent-file">@j.File</div>
+                            <div class="mf-recent-meta">@j.Rows rows &middot; <span class="mf-mono">@j.Id</span></div>
+                        </div>
+                        <div class="mf-recent-when">@j.At</div>
+                        <a href="@Url.Action("Download", "Generate", new { jobId = j.Id })" class="mf-btn mf-btn-ghost mf-btn-sm">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <path d="M7 10l5 5 5-5" />
+                                <path d="M12 15V3" />
+                            </svg>
+                            Re-download
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+<!-- How it works modal -->
+<div class="modal fade" id="howItWorksModal" tabindex="-1" aria-labelledby="howItWorksLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:560px;">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom:1px solid var(--mf-border);">
+                <h5 class="modal-title" id="howItWorksLabel" style="font-weight:600;">Preparing your template</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding:20px 24px;">
+                <div class="mf-howto-step">
+                    <span class="mf-howto-num">1</span>
+                    <div class="mf-howto-text"><strong>Open your template</strong> in Word or your PDF editor.</div>
+                </div>
+                <div class="mf-howto-step">
+                    <span class="mf-howto-num">2</span>
+                    <div class="mf-howto-text"><strong>Type <code>{{name}}</code> and <code>{{nik}}</code></strong> where the data should go. Curly braces are mandatory.</div>
+                </div>
+                <div class="mf-howto-step">
+                    <span class="mf-howto-num">3</span>
+                    <div class="mf-howto-text"><strong>Save and upload.</strong> MerchanTFile finds the placeholders and replaces them on each page.</div>
+                </div>
+                <div class="mf-howto-example">
+                    Hello, <mark>{{name}}</mark>. Your ID is <mark>{{nik}}</mark>.<br />
+                    &rarr; Hello, <mark>Ahmad Saputra</mark>. Your ID is <mark>3201234567890123</mark>.
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top:1px solid var(--mf-border);">
+                <button type="button" class="mf-btn mf-btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="@Url.Action("Wizard", "Generate", new { step = 1 })" class="mf-btn mf-btn-primary">Start a new job</a>
+            </div>
+        </div>
+    </div>
+</div>

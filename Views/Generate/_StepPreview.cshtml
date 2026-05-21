@@ -1,0 +1,101 @@
+@model MerchantFile.Models.GenerateJobViewModel
+@{
+    var total = Model.Rows.Count;
+    var selected = Model.SelectedPage;
+    if (selected < 0) selected = 0;
+    if (selected >= total) selected = total - 1;
+    var current = Model.Rows[selected];
+    var prev = selected - 1;
+    var next = selected + 1;
+}
+
+<div class="mf-step-header">
+    <h2 class="mf-h2">Preview your output</h2>
+    <p>@total pages ready. Click any thumbnail to inspect.</p>
+</div>
+
+<div class="mf-preview-grid">
+    <div class="mf-thumbs">
+        @for (var i = 0; i < total; i++)
+        {
+            var row = Model.Rows[i];
+            var active = i == selected;
+            <a href="@Url.Action("Wizard", "Generate", new { step = 3, jobId = Model.JobId, page = i })"
+               class="mf-thumb @(active ? "active" : "")">
+                @Html.Partial("_DocPage", new ViewDataDictionary {
+                    { "Row", row }, { "Index", i }, { "Total", total }, { "Width", 56 }
+                })
+                <div class="mf-thumb-meta">
+                    <div class="mf-thumb-page">P.@(i + 1)</div>
+                    <div class="mf-thumb-name">@row.FullName</div>
+                </div>
+            </a>
+        }
+    </div>
+
+    <div class="mf-preview-card">
+        <div class="mf-preview-toolbar">
+            <div class="mf-toolbar-nav">
+                @if (prev >= 0)
+                {
+                    <a class="mf-pill-btn mf-prev-btn" href="@Url.Action("Wizard", "Generate", new { step = 3, jobId = Model.JobId, page = prev })">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 6 9 12 15 18" />
+                        </svg>
+                    </a>
+                }
+                else
+                {
+                    <button class="mf-pill-btn" disabled>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 6 9 12 15 18" />
+                        </svg>
+                    </button>
+                }
+                <span class="mf-page-counter">@(selected + 1) of @total</span>
+                @if (next < total)
+                {
+                    <a class="mf-pill-btn mf-next-btn" href="@Url.Action("Wizard", "Generate", new { step = 3, jobId = Model.JobId, page = next })">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 6 15 12 9 18" />
+                        </svg>
+                    </a>
+                }
+                else
+                {
+                    <button class="mf-pill-btn" disabled>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 6 15 12 9 18" />
+                        </svg>
+                    </button>
+                }
+            </div>
+            <div class="mf-preview-meta">
+                <b>@current.FullName</b> &middot; <span class="mf-mono">@current.Nik</span>
+            </div>
+        </div>
+        <div class="mf-preview-stage">
+            @Html.Partial("_DocPage", new ViewDataDictionary {
+                { "Row", current }, { "Index", selected }, { "Total", total }, { "Width", 340 }
+            })
+        </div>
+    </div>
+</div>
+
+<div class="mf-wizard-footer">
+    <a href="@Url.Action("Wizard", "Generate", new { step = 2, jobId = Model.JobId })" class="mf-btn mf-btn-secondary mf-btn-lg">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="20" y1="12" x2="4" y2="12" />
+            <polyline points="10 18 4 12 10 6" />
+        </svg>
+        Back
+    </a>
+    <a href="@Url.Action("Wizard", "Generate", new { step = 4, jobId = Model.JobId })" class="mf-btn mf-btn-primary mf-btn-lg">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <path d="M7 10l5 5 5-5" />
+            <path d="M12 15V3" />
+        </svg>
+        Download @total-page PDF
+    </a>
+</div>

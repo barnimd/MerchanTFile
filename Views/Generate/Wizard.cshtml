@@ -1,0 +1,103 @@
+@model MerchantFile.Models.GenerateJobViewModel
+@{
+    ViewBag.Title = "New job";
+    var steps = new[] {
+        new { Label = "Template", Desc = "PDF or Word" },
+        new { Label = "Data",     Desc = "Excel file" },
+        new { Label = "Preview",  Desc = "Check pages" },
+        new { Label = "Download", Desc = "Save PDF" }
+    };
+}
+
+<!-- Stepper -->
+<div class="mf-stepper-wrap">
+    <div class="mf-stepper">
+        @for (var i = 0; i < steps.Length; i++)
+        {
+            var idx = i + 1;
+            var done = idx < Model.Step;
+            var active = idx == Model.Step;
+            var cls = done ? "mf-step-node--done" : active ? "mf-step-node--active" : "";
+            <div class="mf-step-node @cls">
+                <div class="mf-step-circle">
+                    @if (done)
+                    {
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="4 12 10 18 20 6" />
+                        </svg>
+                    }
+                    else
+                    {
+                        @idx
+                    }
+                </div>
+                <div class="mf-step-label">
+                    <div class="mf-step-label-main">@steps[i].Label</div>
+                    <div class="mf-step-label-sub">@steps[i].Desc</div>
+                </div>
+            </div>
+            if (i < steps.Length - 1)
+            {
+                var conDone = idx < Model.Step;
+                <div class="mf-step-connector @(conDone ? "mf-step-connector--done" : "")"></div>
+            }
+        }
+    </div>
+</div>
+
+<!-- Step body -->
+<div class="mf-wizard-body">
+    <div class="mf-wizard-inner">
+        @switch (Model.Step)
+        {
+            case 1:
+                @Html.Partial("_StepTemplate", Model)
+                break;
+            case 2:
+                @Html.Partial("_StepData", Model)
+                break;
+            case 3:
+                @Html.Partial("_StepPreview", Model)
+                break;
+            case 4:
+                @Html.Partial("_StepDone", Model)
+                break;
+        }
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        (function ($) {
+            // Drop zone: visual hover state + simulated upload that auto-advances.
+            $('.mf-dropzone').on('dragover', function (e) {
+                e.preventDefault();
+                $(this).addClass('mf-dropzone--hover');
+            }).on('dragleave drop', function (e) {
+                e.preventDefault();
+                $(this).removeClass('mf-dropzone--hover');
+            });
+
+            $('.mf-dropzone').on('click', function () {
+                var $input = $(this).find('input[type=file]');
+                if ($input.length) $input.trigger('click');
+            });
+
+            $('.mf-dropzone input[type=file]').on('click', function (e) {
+                e.stopPropagation();
+            });
+
+            $('.mf-dropzone input[type=file]').on('change', function () {
+                var $form = $(this).closest('form');
+                if ($form.length) $form.trigger('submit');
+            });
+
+            // Preview thumbnail / arrow nav (preserves jobId on the URL).
+            $(document).on('keydown', function (e) {
+                if (!$('.mf-preview-grid').length) return;
+                if (e.key === 'ArrowLeft')  { $('.mf-prev-btn').get(0) && $('.mf-prev-btn')[0].click(); }
+                if (e.key === 'ArrowRight') { $('.mf-next-btn').get(0) && $('.mf-next-btn')[0].click(); }
+            });
+        })(jQuery);
+    </script>
+}

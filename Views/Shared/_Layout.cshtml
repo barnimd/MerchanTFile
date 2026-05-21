@@ -1,36 +1,60 @@
-﻿<!DOCTYPE html>
+@{
+    var controller = (ViewContext.RouteData.Values["controller"] ?? "").ToString();
+    var action = (ViewContext.RouteData.Values["action"] ?? "").ToString();
+    bool isHome = controller == "Home";
+    bool isWizard = controller == "Generate" && action == "Wizard";
+    bool isHistory = controller == "Generate" && action == "History";
+}<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - MerchanTFile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@@400;500;600;700&family=Geist+Mono:wght@@400;500&display=swap" rel="stylesheet">
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-        <div class="container">
-            @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                </ul>
-            </div>
+    <header class="mf-topnav">
+        <a href="@Url.Action("Index", "Home")" class="mf-brand">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                <rect x="2" y="2" width="28" height="28" rx="7" fill="#1E40AF" />
+                <path d="M9 22V10l4 6 4-6v12" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" fill="none" />
+                <circle cx="22.5" cy="20" r="2.5" fill="#fff" />
+            </svg>
+            <span class="mf-brand-text">
+                <span class="mf-brand-name">MerchanTFile</span>
+                <span class="mf-brand-sub">Document generator</span>
+            </span>
+        </a>
+
+        <nav class="mf-nav">
+            <a href="@Url.Action("Index", "Home")" class="mf-nav-item @(isHome ? "active" : "")">Home</a>
+            <a href="@Url.Action("Wizard", "Generate", new { step = 1 })" class="mf-nav-item @(isWizard ? "active" : "")">New job</a>
+        </nav>
+
+        <div class="mf-spacer"></div>
+
+        <a href="@Url.Action("History", "Generate")" class="mf-btn mf-btn-ghost mf-btn-sm @(isHistory ? "active" : "")">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 1 0 3-6.7" />
+                <path d="M3 4v5h5" />
+                <path d="M12 7v5l3 2" />
+            </svg>
+            History
+        </a>
+        <span class="mf-nav-divider"></span>
+        <div style="display:inline-flex;align-items:center;gap:10px;">
+            <span class="mf-avatar">RH</span>
+            <span style="font-size:13px;font-weight:500;">Rina</span>
         </div>
-    </nav>
-    <div class="container body-content">
+    </header>
+
+    <main>
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+    </main>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

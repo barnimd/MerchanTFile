@@ -1,0 +1,67 @@
+@using MerchantFile.Models
+@{
+    ViewBag.Title = "History";
+    var jobs = ViewBag.RecentJobs as System.Collections.Generic.List<RecentJob> ?? new System.Collections.Generic.List<RecentJob>();
+}
+
+<div class="mf-page">
+    <div class="mf-section-head" style="margin-bottom:18px;">
+        <div>
+            <h1 class="mf-h2" style="margin-bottom:4px;">Job history</h1>
+            <div class="mf-text-muted" style="font-size:13px;">Every job you've run, newest first.</div>
+        </div>
+        <a href="@Url.Action("Wizard", "Generate", new { step = 1 })" class="mf-btn mf-btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            New job
+        </a>
+    </div>
+
+    @if (jobs.Count == 0)
+    {
+        <div class="mf-recent">
+            <div class="mf-recent-empty">No jobs yet</div>
+        </div>
+    }
+    else
+    {
+        <div class="mf-recent">
+            @foreach (var j in jobs)
+            {
+                var failed = j.Status == "failed";
+                <div class="mf-recent-row">
+                    <span class="mf-recent-status @(failed ? "mf-recent-status--failed" : "")">
+                        @if (failed)
+                        {
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                            </svg>
+                        }
+                        else
+                        {
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="4 12 10 18 20 6" />
+                            </svg>
+                        }
+                    </span>
+                    <div class="mf-recent-main">
+                        <div class="mf-recent-file">@j.File</div>
+                        <div class="mf-recent-meta">@j.Rows rows &middot; <span class="mf-mono">@j.Id</span></div>
+                    </div>
+                    <div class="mf-recent-when">@j.At</div>
+                    <a href="@Url.Action("Download", "Generate", new { jobId = j.Id })" class="mf-btn mf-btn-ghost mf-btn-sm">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <path d="M7 10l5 5 5-5" />
+                            <path d="M12 15V3" />
+                        </svg>
+                        Re-download
+                    </a>
+                </div>
+            }
+        </div>
+    }
+</div>

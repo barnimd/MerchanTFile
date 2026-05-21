@@ -1,0 +1,88 @@
+@using System
+@using MerchantFile.Models
+@{
+    var row = ViewData["Row"] as ExcelRow ?? new ExcelRow();
+    var index = ViewData["Index"] is int ? (int)ViewData["Index"] : 0;
+    var total = ViewData["Total"] is int ? (int)ViewData["Total"] : 1;
+    var width = ViewData["Width"] is int ? (int)ViewData["Width"] : 240;
+    var height = width * 297.0 / 210.0;
+    var pad = width * 0.08;
+    var headerH = width * 0.14;
+    var titleSquare = width * 0.05;
+    var titleFs = width * 0.035;
+    var noFs = width * 0.022;
+    var introFs = width * 0.028;
+    var labelFs = width * 0.022;
+    var valueFs = width * 0.034;
+    var consentFs = width * 0.024;
+    var footFs = width * 0.02;
+    var sigPadTop = pad * 1.2;
+    var sigHeight = pad * 1.4;
+
+    Func<double, string> px = v => v.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture) + "px";
+}
+
+<div class="mf-docpage" style="width:@px(width);height:@px(height);">
+    <div class="mf-docpage-header" style="height:@px(headerH);padding-left:@px(pad);padding-right:@px(pad);">
+        <div class="mf-docpage-title-row" style="gap:@px(width * 0.025);">
+            <div class="mf-docpage-title-square" style="width:@px(titleSquare);height:@px(titleSquare);"></div>
+            <div class="mf-docpage-title" style="font-size:@px(titleFs);">REGISTRATION FORM</div>
+        </div>
+        <div class="mf-docpage-no" style="font-size:@px(noFs);">
+            NO. @((index + 1).ToString("0000"))
+        </div>
+    </div>
+
+    <div style="padding:@px(pad);padding-top:@px(pad * 0.8);">
+        <div class="mf-docpage-intro" style="font-size:@px(introFs);margin-bottom:@px(pad * 0.4);">
+            Please verify the following information and sign at the bottom of the page.
+        </div>
+
+        <div style="margin-top:@px(pad * 0.6);">
+            <!-- Full Name -->
+            <div style="margin-bottom:@px(pad * 0.45);">
+                <div class="mf-docpage-field-label" style="font-size:@px(labelFs);margin-bottom:@px(pad * 0.1);">Full Name</div>
+                <div class="mf-docpage-field-value" style="font-size:@px(valueFs);font-weight:600;border-bottom:1px solid #94a3b8;padding-bottom:@px(pad * 0.15);">
+                    @row.FullName
+                </div>
+            </div>
+            <!-- NIK -->
+            <div style="margin-bottom:@px(pad * 0.45);">
+                <div class="mf-docpage-field-label" style="font-size:@px(labelFs);margin-bottom:@px(pad * 0.1);">NIK (Card ID)</div>
+                <div class="mf-docpage-field-value mf-text-mono" style="font-size:@px(valueFs);font-weight:600;letter-spacing:1px;border-bottom:1px solid #94a3b8;padding-bottom:@px(pad * 0.15);">
+                    @row.Nik
+                </div>
+            </div>
+            <!-- Date of Issue -->
+            <div style="margin-bottom:@px(pad * 0.45);">
+                <div class="mf-docpage-field-label" style="font-size:@px(labelFs);margin-bottom:@px(pad * 0.1);">Date of Issue</div>
+                <div class="mf-docpage-field-value--placeholder" style="font-size:@px(valueFs);border-bottom:1px dashed #e2e8f0;padding-bottom:@px(pad * 0.15);">&mdash;</div>
+            </div>
+            <!-- Place -->
+            <div style="margin-bottom:@px(pad * 0.45);">
+                <div class="mf-docpage-field-label" style="font-size:@px(labelFs);margin-bottom:@px(pad * 0.1);">Place</div>
+                <div class="mf-docpage-field-value--placeholder" style="font-size:@px(valueFs);border-bottom:1px dashed #e2e8f0;padding-bottom:@px(pad * 0.15);">&mdash;</div>
+            </div>
+        </div>
+
+        <div class="mf-docpage-consent" style="margin-top:@px(pad * 0.8);padding:@px(pad * 0.5);font-size:@px(consentFs);">
+            By signing this form, I confirm that the information above is accurate and consent to its use for the stated purposes.
+        </div>
+
+        <div class="mf-docpage-sig" style="margin-top:@px(sigPadTop);gap:@px(pad);">
+            <div class="mf-docpage-sig-line">
+                <div class="mf-docpage-sig-rule" style="height:@px(sigHeight);"></div>
+                <div class="mf-docpage-sig-label" style="font-size:@px(noFs);margin-top:@px(pad * 0.15);">Applicant signature</div>
+            </div>
+            <div class="mf-docpage-sig-line">
+                <div class="mf-docpage-sig-rule" style="height:@px(sigHeight);"></div>
+                <div class="mf-docpage-sig-label" style="font-size:@px(noFs);margin-top:@px(pad * 0.15);">Authorized officer</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mf-docpage-footer" style="bottom:@px(pad * 0.5);left:@px(pad);right:@px(pad);font-size:@px(footFs);">
+        <span>MerchanTFile &middot; auto-generated</span>
+        <span>Page @(index + 1) of @total</span>
+    </div>
+</div>
